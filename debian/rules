@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_installsystemd:
+	dh_installsystemd -padaptation-krypton-configs --name=modules modules.service --no-start
+	dh_installsystemd -padaptation-krypton-configs --name=droidian-perf droidian-perf.service --no-start

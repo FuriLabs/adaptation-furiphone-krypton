@@ -1,0 +1,21 @@
+Source: adaptation-furiphone-krypton
+Maintainer: Bardia Moshiri
+Section: metapackages
+Priority: optional
+Build-Depends: debhelper (>= 10)
+Standards-Version: 4.5.0.3
+Vcs-Browser: https://github.com/furilabs/adaptation-droidian-zahedan
+Vcs-Git: https://github.com/furilabs/adaptation-droidian-zahedan.git
+
+Package: adaptation-furiphone-krypton
+Architecture: arm64
+Depends: ${misc:Depends},
+         adaptation-hybris-api32-phone,
+         adaptation-krypton-configs
+Description: adaptation-furiphone-krypton - meta
+ FuriPhone FLX1 api32 adaptation metapackage
+
+Package: adaptation-krypton-configs
+Architecture: arm64
+Depends: ${misc:Depends},
+Description: krypton's adaptation configs
