@@ -1,0 +1,11 @@
+{
+    "name": "FuriPhone FLX1",
+    "x-res": 1080,
+    "y-res": 2412,
+    "cutouts": [
+        {
+            "name": "notch",
+            "path": "M 40,0 L 40,52 L 120,52 L 120,0 Z"
+        }
+    ]
+}
