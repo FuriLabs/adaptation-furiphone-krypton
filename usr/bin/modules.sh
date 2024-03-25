@@ -1,5 +1,10 @@
 #!/bin/bash
 
+mkdir -p /lib/modules/$(uname -r)
+cp /vendor/lib/modules/* /lib/modules/$(uname -r)
+
+depmod -a
+
 modules=(
 trace_mmstat
 met
