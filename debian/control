@@ -18,4 +18,5 @@ Description: adaptation-furiphone-krypton - meta
 Package: adaptation-krypton-configs
 Architecture: arm64
 Depends: ${misc:Depends},
+         bsdextrautils,
 Description: krypton's adaptation configs
