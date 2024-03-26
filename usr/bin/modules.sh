@@ -7,15 +7,15 @@ depmod -a
 
 modules=(
 trace_mmstat
-met
+connfem
 conninfra
+bt_drv_6877
+fmradio_drv_connac2x
+gps_drv
 wmt_chrdev_wifi
 wlan_drv_gen4m
-bt_drv_6877
-gps_drv
-fmradio_drv_connac2x
-connfem
 fpsgo
+met
 )
 
 for name in "${modules[@]}"; do
