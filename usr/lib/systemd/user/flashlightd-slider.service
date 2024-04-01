@@ -1,0 +1,8 @@
+[Unit]
+Description=flashlightd slider listener
+After=org.droidian.Flashlightd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/libexec/flashlightd-slider
+Restart=on-failure
