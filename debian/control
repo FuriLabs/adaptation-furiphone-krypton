@@ -11,7 +11,9 @@ Package: adaptation-furiphone-krypton
 Architecture: arm64
 Depends: ${misc:Depends},
          adaptation-hybris-api32-phone,
-         adaptation-krypton-configs
+         adaptation-krypton-configs,
+         pqcli,
+         gsd-adapter,
 Description: adaptation-furiphone-krypton - meta
  FuriPhone FLX1 api32 adaptation metapackage
 
