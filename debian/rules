@@ -3,6 +3,10 @@
 %:
 	dh $@
 
+override_dh_auto_build:
+	mkdir -p usr/libexec/
+	gcc src/flashlightd-slider.c `pkg-config --cflags --libs dbus-1` -o usr/libexec/flashlightd-slider
+
 override_dh_installsystemd:
 	dh_installsystemd -padaptation-krypton-configs --name=modules modules.service --no-start
 	dh_installsystemd -padaptation-krypton-configs --name=droidian-perf droidian-perf.service --no-start
