@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
         int ret = init_hidl(choice);
 
         if (ret != 0) {
-           printf("None of the backends are available for wakelock. Exiting.\n");
+           printf("None of the backends are available for mtkpower. Exiting.\n");
            return 1;
         } else {
            printf("Using HIDL backend\n");
