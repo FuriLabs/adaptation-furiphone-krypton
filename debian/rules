@@ -6,6 +6,8 @@
 override_dh_auto_build:
 	mkdir -p usr/libexec/
 	gcc src/flashlightd-slider.c `pkg-config --cflags --libs dbus-1` -o usr/libexec/flashlightd-slider
+	gcc src/mtkpower.c `pkg-config --libs --cflags libgbinder` -o usr/bin/mtkpower
+	gcc src/krypton-120hz.c `pkg-config --cflags --libs gnome-desktop-3.0 gtk+-3.0` -o usr/libexec/krypton-120hz
 
 override_dh_installsystemd:
 	dh_installsystemd -padaptation-krypton-configs --name=modules modules.service --no-start
