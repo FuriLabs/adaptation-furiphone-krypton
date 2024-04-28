@@ -2,10 +2,13 @@
     "name": "FuriPhone FLX1",
     "x-res": 1080,
     "y-res": 2412,
+    "width": 68,
+    "height": 157,
+    "border-radius": 150,
     "cutouts": [
         {
             "name": "notch",
-            "path": "M 40,0 L 40,52 L 120,52 L 120,0 Z"
+            "path": "M 135,20 L 135,118 L 255,118 L 255,20 Z"
         }
     ]
 }
