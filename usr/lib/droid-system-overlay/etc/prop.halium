@@ -1,0 +1,30 @@
+ro.product.property_source_order=odm,vendor,product,system
+vendor.rild.libpath=mtk-ril.so
+vendor.rild.libargs=-d /dev/ttyC0
+wifi.interface=wlan0
+ro.mediatek.wlan.wsc=1
+ro.mediatek.wlan.p2p=1
+mediatek.wlan.ctia=0
+wifi.tethering.interface=ap0
+ro.opengles.version=196610
+wifi.direct.interface=p2p0
+
+# Power off opt in IPO
+sys.ipo.pwrdncap=2
+
+ro.zygote.preload.enable=0
+ro.kernel.zio=38,108,105,16
+
+# Disable dirty region for Mali
+#debug.hwui.render_dirty_regions=false
+
+# performance
+ro.mtk_perf_simple_start_win=1
+ro.mtk_perf_fast_start_win=1
+ro.mtk_perf_response_time=1
+
+# disable ipo for development
+sys.ipo.disable=1
+
+# identity
+Build.BRAND=MTK
