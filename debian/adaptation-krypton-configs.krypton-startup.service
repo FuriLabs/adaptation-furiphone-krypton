@@ -1,12 +1,12 @@
 [Unit]
-Description=Enable all modules on boot
+Description=Apply all performance fixes for krypton
 Requires=lxc@android.service
-Before=droidian-boot-wlan.service
+Before=furios-boot-wlan.service
 After=lxc@android.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/modules.sh
+ExecStart=/usr/libexec/krypton-startup
 
 [Install]
 WantedBy=multi-user.target

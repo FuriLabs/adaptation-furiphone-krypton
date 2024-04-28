@@ -1,0 +1,19 @@
+#!/bin/bash
+
+setprop persist.vendor.mtk.volte.enable 0
+
+while [ "`getprop vendor.connsys.driver.ready`" != "yes" ]; do
+    sleep 1
+done
+
+sleep 3
+
+echo 1 > /dev/wmtWifi
+
+while [ ! -e /sys/class/ieee80211/phy0 ]; do
+    sleep 1
+done
+
+iw phy phy0 wowlan enable magic-packet
+
+exit 0

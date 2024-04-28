@@ -1,7 +1,0 @@
-/etc/udev/rules.d
-/etc/pulse
-/etc/phosh
-/etc/ofono/binder.d
-/usr/bin
-/usr/lib/droidian/device
-/usr/lib/droid-vendor-overlay
