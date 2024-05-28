@@ -1,0 +1,4 @@
+# FPSGO
+service fpsgo /vendor/bin/fpsgo_HALIUM_DISABLED
+    disabled
+    oneshot
