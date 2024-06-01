@@ -1,0 +1,20 @@
+#!/bin/bash
+
+MODULE_DIR="/lib/modules/$(uname -r)"
+VENDOR_MODULE_DIR="/usr/lib/droid-vendor-overlay/lib/modules/"
+
+if [ -d "${MODULE_DIR}" ]; then
+	if [ -f "${MODULE_DIR}/modules.order" ]; then
+		if [ ! -d "${VENDOR_MODULE_DIR}" ]; then
+			mkdir -p "${VENDOR_MODULE_DIR}"
+		fi
+
+		while IFS= read -r line; do
+			if [ -f "${MODULE_DIR}/$line" ]; then
+				cp -v "${MODULE_DIR}/$line" "${VENDOR_MODULE_DIR}"
+			fi
+		done < "${MODULE_DIR}/modules.order"
+	fi
+fi
+
+exit 0
