@@ -19,6 +19,7 @@ Depends: ${misc:Depends},
          adaptation-krypton-configs,
          pqcli,
          gsd-adapter,
+Essential: yes
 Description: adaptation-furiphone-krypton - meta
  FuriPhone FLX1 api32 adaptation metapackage
 
