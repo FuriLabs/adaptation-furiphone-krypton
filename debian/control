@@ -14,6 +14,7 @@ Vcs-Git: https://github.com/furilabs/adaptation-droidian-zahedan.git
 Package: adaptation-furiphone-krypton
 Architecture: arm64
 Depends: ${misc:Depends},
+         linux-bootimage-furiphone-krypton,
          adaptation-hybris-api32-phone,
          adaptation-krypton-configs,
          pqcli,
