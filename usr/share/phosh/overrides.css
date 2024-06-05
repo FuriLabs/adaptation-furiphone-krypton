@@ -1,0 +1,35 @@
+#top-bar
+{
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.rotate-0 #top-bar
+{
+  margin-left: calc(13vw + 5px);
+  margin-right: calc(3vw - 3px);
+  margin-top: calc(0.5vh);
+  margin-bottom: calc(-0.5vh);
+  min-height: calc(4.6vh);
+}
+
+.rotate-90 #top-bar
+{
+  margin-right: calc(10vh + 3px);
+  margin-left: calc(3vh + 1px);
+  margin-top: calc(1.3vw);
+  margin-bottom: calc(-1.3vw);
+  min-height: calc(5.9vw);
+}
+
+.rotate-180 #top-bar
+{
+  margin-left: calc(3vw + 1px);
+  margin-right: calc(3vw + 1px);
+}
+
+.rotate-270 #top-bar
+{
+  margin-right: calc(3vh + 1px);
+  margin-left: calc(3vh + 1px);
+}
