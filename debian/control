@@ -20,6 +20,7 @@ Depends: ${misc:Depends},
          pqcli,
          gsd-adapter,
          krypton-vendor-32,
+         assistant-button,
 Essential: yes
 Description: adaptation-furiphone-krypton - meta
  FuriPhone FLX1 api32 adaptation metapackage
