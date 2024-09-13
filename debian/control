@@ -22,6 +22,7 @@ Depends: ${misc:Depends},
          krypton-vendor-32,
          assistant-button,
          ofono-binder-plugin-ext-mtk,
+         krypton-factory-image,
 Essential: yes
 Description: adaptation-furiphone-krypton - meta
  FuriPhone FLX1 api32 adaptation metapackage
