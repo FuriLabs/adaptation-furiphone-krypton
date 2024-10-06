@@ -23,6 +23,7 @@ Depends: ${misc:Depends},
          assistant-button,
          ofono-binder-plugin-ext-mtk,
          krypton-factory-image,
+         krypton-modem-image,
 Essential: yes
 Description: adaptation-furiphone-krypton - meta
  FuriPhone FLX1 api32 adaptation metapackage
