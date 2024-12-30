@@ -1,5 +1,9 @@
 #!/bin/bash
 
+[ -e "/sys/kernel/furilabs/palmrejectionmode/common_node/" ] && chown furios:furios /sys/kernel/furilabs/palmrejectionmode/common_node/*mode
+[ -e "/sys/class/flashlight/mt-flash-led1/" ] && chown furios:furios /sys/class/flashlight/mt-flash-led1/*
+[ -e "/sys/class/flashlight/mt-flash-led2/" ] && chown furios:furios /sys/class/flashlight/mt-flash-led2/*
+
 while [ "`getprop vendor.connsys.driver.ready`" != "yes" ]; do
     sleep 1
 done
@@ -17,5 +21,19 @@ iw phy phy0 wowlan enable magic-packet
 echo "0xFF:0x03" > /proc/net/wlan/dbgLevel
 
 setprop ctl.stop statsd
+
+while [ ! -e /dev/binderfs/anbox-binder ]; do
+    sleep 1
+done
+
+chmod 666 /dev/binderfs/anbox-*
+
+chown furios:furios /dev/binderfs/anbox-*
+
+while [ ! -e /sys/class/leds/vibrator/activate ]; do
+    sleep 1
+done
+
+chown furios:furios /sys/class/leds/vibrator/*
 
 exit 0
