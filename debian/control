@@ -33,4 +33,5 @@ Package: adaptation-krypton-configs
 Architecture: arm64
 Depends: ${misc:Depends}, ${shlibs:Depends},
          bsdextrautils,
+         e2fsprogs,
 Description: krypton's adaptation configs
