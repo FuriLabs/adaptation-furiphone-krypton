@@ -36,4 +36,8 @@ done
 
 chown furios:furios /sys/class/leds/vibrator/*
 
+[ -e "/sys/class/leds/green/" ] && chown furios:furios /sys/class/leds/green/*
+[ -e "/sys/class/flashlight_core/flashlight/" ] && chown furios:furios /sys/class/flashlight_core/flashlight/*
+[ -e "/sys/class/leds/lcd-backlight/" ] && chown furios:furios /sys/class/leds/lcd-backlight/*
+
 exit 0
