@@ -1,3 +1,0 @@
-service vendor.light-default /vendor/bin/hw/android.hardware.lights-service.mediatek_HALIUM_DISABLED
-    disabled
-    oneshot

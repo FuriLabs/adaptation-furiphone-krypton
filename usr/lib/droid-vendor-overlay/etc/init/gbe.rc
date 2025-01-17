@@ -1,4 +1,0 @@
-# GBE
-service gbe /vendor/bin/gbe_HALIUM_DISABLED
-    disabled
-    oneshot

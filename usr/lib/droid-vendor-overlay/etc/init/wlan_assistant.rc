@@ -1,3 +1,0 @@
-service wlan_assistant /vendor/bin/wlan_assistant_HYBRIS_DISABLED
-    disabled
-    oneshot

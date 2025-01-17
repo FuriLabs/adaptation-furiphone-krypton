@@ -1,3 +1,0 @@
-service thermalloadalgod /vendor/bin/thermalloadalgod_HALIUM_DISABLED
-    disabled
-    oneshot

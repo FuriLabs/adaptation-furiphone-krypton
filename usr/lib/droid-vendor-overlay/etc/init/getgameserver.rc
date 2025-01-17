@@ -1,3 +1,0 @@
-service getgameserver /vendor/bin/getgameserver_HALIUM_DISABLED
-    disabled
-    oneshot

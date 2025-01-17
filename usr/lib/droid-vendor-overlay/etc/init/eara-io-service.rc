@@ -1,3 +1,0 @@
-service eara-io /vendor/bin/eara_io_service_HALIUM_DISABLED
-    disabled
-    oneshot
