@@ -14,13 +14,14 @@ Vcs-Git: https://github.com/furilabs/adaptation-furiphone-krypton.git
 
 Package: adaptation-furiphone-krypton
 Architecture: arm64
+Pre-Depends: linux-bootimage-furiphone-krypton (>= 4.19.325),
+             linux-image-furiphone-krypton (>= 4.19.325),
+             krypton-vendor-32 (>= 6),
 Depends: ${misc:Depends},
-         linux-bootimage-furiphone-krypton,
          adaptation-hybris-api32-phone,
          adaptation-krypton-configs,
          pqcli,
          gsd-adapter,
-         krypton-vendor-32 (>= 6),
          assistant-button,
          ofono-binder-plugin-ext-mtk,
          krypton-factory-image,
