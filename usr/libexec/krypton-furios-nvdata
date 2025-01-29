@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -euo pipefail
+
+NVDATA_PART="/dev/disk/by-partlabel/nvdata"
+
+if ! mountpoint -q /mnt/vendor/nvdata; then
+    # Uh oh, looks like we need to repair the partition
+    echo "nvdata partition is not mounted, repairing..."
+    mkfs.ext4 -F "${NVDATA_PART}"
+
+    mkdir -p /tmp/nvdata-rootfs /mnt/vendor/nvdata
+    cp -va /mnt/vendor/nvdata/. /tmp/nvdata-rootfs
+    mount "${NVDATA_PART}" /mnt/vendor/nvdata
+    cp -va /tmp/nvdata-rootfs/. /mnt/vendor/nvdata
+    rm -rf /tmp/nvdata-rootfs
+fi
