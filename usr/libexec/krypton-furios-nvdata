@@ -10,6 +10,7 @@ if ! mountpoint -q /mnt/vendor/nvdata; then
     mkfs.ext4 -F "${NVDATA_PART}"
 
     mkdir -p /tmp/nvdata-rootfs /mnt/vendor/nvdata
+    chown -R system:system /mnt/vendor/nvdata
     cp -va /mnt/vendor/nvdata/. /tmp/nvdata-rootfs
     mount "${NVDATA_PART}" /mnt/vendor/nvdata
     cp -va /tmp/nvdata-rootfs/. /mnt/vendor/nvdata
