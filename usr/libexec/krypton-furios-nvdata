@@ -4,15 +4,46 @@ set -euo pipefail
 
 NVDATA_PART="/dev/disk/by-partlabel/nvdata"
 
-if ! mountpoint -q /mnt/vendor/nvdata; then
-    # Uh oh, looks like we need to repair the partition
-    echo "nvdata partition is not mounted, repairing..."
-    mkfs.ext4 -F "${NVDATA_PART}"
+# if nvdata doesn't exist then just exit gracefully, nothing to do.
+if [ ! -e "${NVDATA_PART}" ]; then
+    echo "Partition ${NVDATA_PART} not found."
+    exit 0
+fi
 
-    mkdir -p /tmp/nvdata-rootfs /mnt/vendor/nvdata
-    chown -R system:system /mnt/vendor/nvdata
-    cp -va /mnt/vendor/nvdata/. /tmp/nvdata-rootfs
-    mount "${NVDATA_PART}" /mnt/vendor/nvdata
-    cp -va /tmp/nvdata-rootfs/. /mnt/vendor/nvdata
-    rm -rf /tmp/nvdata-rootfs
+if ! mountpoint -q /mnt/vendor/nvdata; then
+    filesystem=$(blkid -o value -s TYPE "${NVDATA_PART}")
+
+    mkdir -p /tmp/nvdata-tmp /mnt/vendor/nvdata
+    if [ -z "${filesystem}" ]; then
+        # if nvdata has no filesystem, its definitely corrupted.
+        echo "nvdata partition is corrupted, repairing..."
+        mkfs.ext4 -F "${NVDATA_PART}"
+
+        chown -R system:system /mnt/vendor/nvdata
+        cp -va /mnt/vendor/nvdata/. /tmp/nvdata-tmp
+        mount "${NVDATA_PART}" /mnt/vendor/nvdata
+        cp -va /tmp/nvdata-tmp/. /mnt/vendor/nvdata
+        rm -rf /tmp/nvdata-tmp
+    else
+        # first check if nvdata has data at all, if it doesn't, then copy everything
+        # this can prevent cases where android-mount fails to mount nvdata but nvdata itself has good data
+        # but because the assumption is mountpoint of /mnt/vendor/nvdata, then it overwrites good data with (potentially) bad data
+        mount "${NVDATA_PART}" /tmp/nvdata-tmp
+        if [ ! -d "/tmp/nvdata-tmp/md/NVRAM/NVD_IMEI" ]; then
+            echo "nvdata is empty, repairing..."
+            chown -R system:system /mnt/vendor/nvdata
+            cp -va /mnt/vendor/nvdata/. /tmp/nvdata-tmp
+            mount "${NVDATA_PART}" /mnt/vendor/nvdata
+        else
+            # if it has good data then just mount it and move on
+            echo "nvdata already has good data, skipping"
+            mount "${NVDATA_PART}" /mnt/vendor/nvdata
+        fi
+        umount -l /tmp/nvdata-tmp
+    fi
+
+    sync
+    rm -rf /tmp/nvdata-tmp
+else
+    echo "nvdata is good, skipping"
 fi
