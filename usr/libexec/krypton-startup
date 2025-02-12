@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Setup zram on setup
 if grep -q "/dev/zram0" /proc/swaps; then
     echo "zram is already configured"
 else
@@ -16,28 +17,35 @@ else
     swapon -p -3 /dev/zram0
 fi
 
+# Allow FuriOS user to access touchscreen nodes and flashlight
 [ -e "/sys/kernel/furilabs/palmrejectionmode/common_node/" ] && chown furios:furios /sys/kernel/furilabs/palmrejectionmode/common_node/*mode
 [ -e "/sys/class/flashlight/mt-flash-led1/" ] && chown furios:furios /sys/class/flashlight/mt-flash-led1/*
 [ -e "/sys/class/flashlight/mt-flash-led2/" ] && chown furios:furios /sys/class/flashlight/mt-flash-led2/*
 
+# Wait for WLAN to come up
 while [ "`getprop vendor.connsys.driver.ready`" != "yes" ]; do
     sleep 1
 done
 
 sleep 3
 
+# Enable WiFi
 echo 1 > /dev/wmtWifi
 
 while [ ! -e /sys/class/ieee80211/phy0 ]; do
     sleep 1
 done
 
+# Enable wake on lan magic packet
 iw phy phy0 wowlan enable magic-packet
 
+# Disable wmt driver debugging
 echo "0xFF:0x03" > /proc/net/wlan/dbgLevel
 
+# Disable statsd since its unused
 setprop ctl.stop statsd
 
+# Wait for binder nodes to come up and give them the right permission
 while [ ! -e /dev/binderfs/anbox-binder ]; do
     sleep 1
 done
@@ -46,14 +54,19 @@ chmod 666 /dev/binderfs/anbox-*
 
 chown furios:furios /dev/binderfs/anbox-*
 
+# Wait for vibrator driver to come up and give it the right permission
 while [ ! -e /sys/class/leds/vibrator/activate ]; do
     sleep 1
 done
 
 chown furios:furios /sys/class/leds/vibrator/*
 
+# Allow to access brightness nodes
 [ -e "/sys/class/leds/green/" ] && chown furios:furios /sys/class/leds/green/*
 [ -e "/sys/class/flashlight_core/flashlight/" ] && chown furios:furios /sys/class/flashlight_core/flashlight/*
 [ -e "/sys/class/leds/lcd-backlight/" ] && chown furios:furios /sys/class/leds/lcd-backlight/*
+
+# Disable coredumps
+sysctl -w kernel.core_pattern=|/bin/false
 
 exit 0
