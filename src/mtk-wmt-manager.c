@@ -4,12 +4,13 @@
 
 #include <sys/inotify.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
-#include <hybris/properties/properties.h>
+#include <unistd.h>
 
 #define MAX_WAIT_SECOND              0xefffffff
 #define MAX_RETRY_COUNT              5
@@ -170,7 +171,7 @@ int write_nvram(char *filename) {
     } else {
         printf("[NVRAM] Successfully wrote NVRAM to driver\n");
         printf("[NVRAM] Setting vendor.mtk.nvram.ready property\n");
-        property_set("vendor.mtk.nvram.ready", "1");
+        system("setprop vendor.mtk.nvram.ready 1");
     }
 
     free(acnvram);
