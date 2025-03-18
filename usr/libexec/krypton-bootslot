@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# remove vendor module overlay now that everything important is built-in
+rm -rf /usr/lib/droid-vendor-overlay/lib/modules/
+
 SLOT=$(grep -o 'androidboot\.slot_suffix=..' /proc/cmdline | cut -d "=" -f2)
 
 if [ "$SLOT" = "_a" ]; then
