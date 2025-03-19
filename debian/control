@@ -32,6 +32,9 @@ Description: adaptation-furiphone-krypton - meta
 
 Package: adaptation-krypton-configs
 Architecture: arm64
+Pre-Depends: linux-bootimage-furiphone-krypton (>= 4.19.325+furios5),
+             linux-image-furiphone-krypton (>= 4.19.325+furios5),
+             krypton-vendor-32 (>= 9),
 Depends: ${misc:Depends}, ${shlibs:Depends},
          bsdextrautils,
          e2fsprogs,
