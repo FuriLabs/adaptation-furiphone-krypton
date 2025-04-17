@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+
+import dbus
+import dbus.mainloop.glib
+from gi.repository import GLib
+import os
+import time
+import sys
+
+MM_SERVICE = 'org.freedesktop.ModemManager1'
+MM_OBJECT_PATH = '/org/freedesktop/ModemManager1'
+MM_INTERFACE = 'org.freedesktop.DBus.Properties'
+MM_MODEM_INTERFACE = 'org.freedesktop.ModemManager1.Modem'
+
+MARKER_FILE = os.path.expanduser('~/.local/share/lte_transision_done')
+
+# default to non 5G. 5G seems to be problematic in the current stack
+BANDS = [4, 1, 2, 3, 12, 10, 31, 32, 33, 34, 35, 37, 38, 42, 50, 58, 68, 70, 96, 301]
+
+monitored_modems = set()
+mm_check_in_progress = False
+exit_scheduled = False
+
+def set_bands_and_create_marker(modem_path, bus):
+    print(f"Setting bands {BANDS} on modem {modem_path}...")
+    try:
+        modem_obj = bus.get_object(MM_SERVICE, modem_path)
+        modem_iface = dbus.Interface(modem_obj, MM_MODEM_INTERFACE)
+        properties_iface = dbus.Interface(modem_obj, MM_INTERFACE)
+
+        dbus_bands = dbus.Array(BANDS, signature='u')
+        modem_iface.SetCurrentBands(dbus_bands)
+
+        time.sleep(5)
+
+        properties = properties_iface.GetAll(MM_MODEM_INTERFACE)
+        if 'CurrentBands' in properties:
+            current_bands = properties['CurrentBands']
+            current_bands_list = sorted([int(band) for band in current_bands])
+            sorted_bands = sorted(BANDS)
+
+            if current_bands_list != sorted_bands:
+                print(f"Failed to set bands, CurrentBands {current_bands_list} is not equal to our bands: {sorted_bands}")
+                missing_bands = [b for b in sorted_bands if b not in current_bands_list]
+                extra_bands = [b for b in current_bands_list if b not in sorted_bands]
+
+                if missing_bands:
+                    print(f"Missing bands: {missing_bands}")
+                if extra_bands:
+                    print(f"Extra bands: {extra_bands}")
+                return False
+
+        os.makedirs(os.path.dirname(MARKER_FILE), exist_ok=True)
+        with open(MARKER_FILE, 'w') as f:
+            f.write(f"Bands {BANDS} set on {time.strftime('%Y-%m-%d %H:%M:%S')}")
+
+        return True
+    except dbus.exceptions.DBusException as e:
+        print(f"Failed to set bands: {e}")
+        return False
+
+def schedule_exit():
+    global exit_scheduled
+    if not exit_scheduled:
+        exit_scheduled = True
+        GLib.timeout_add_seconds(10, lambda: sys.exit(0))
+    return False
+
+def check_modem_properties(modem_path, bus):
+    global monitored_modems
+
+    if modem_path in monitored_modems:
+        return True
+    try:
+        modem_obj = bus.get_object(MM_SERVICE, modem_path)
+        properties_iface = dbus.Interface(modem_obj, MM_INTERFACE)
+
+        properties = properties_iface.GetAll(MM_MODEM_INTERFACE)
+
+        print(f"Modem: {modem_path}")
+
+        if 'PowerState' in properties:
+            power_state = properties['PowerState']
+            if power_state == 3:
+                print(f"Power State: ON ({power_state})")
+                GLib.timeout_add_seconds(5, lambda: set_bands_and_create_marker(modem_path, bus) and schedule_exit())
+            else:
+                print(f"Power State: {power_state}")
+
+        def on_modem_property_changed(interface, changed_properties, invalidated_properties):
+            if interface == MM_MODEM_INTERFACE:
+                if 'PowerState' in changed_properties:
+                    value = changed_properties['PowerState']
+                    print(f"Power State changed on {modem_path} to: {value}")
+                    if value == 3:
+                        print("Power State is now ON")
+                        GLib.timeout_add_seconds(5, lambda: set_bands_and_create_marker(modem_path, bus) and schedule_exit())
+
+        properties_iface.connect_to_signal('PropertiesChanged', on_modem_property_changed)
+        monitored_modems.add(modem_path)
+
+        return True
+    except dbus.exceptions.DBusException as e:
+        print(f"D-Bus error when checking modem {modem_path}: {e}")
+        return False
+
+def find_modems(bus):
+    try:
+        obj_manager = dbus.Interface(bus.get_object(MM_SERVICE, '/'),
+                                     'org.freedesktop.DBus.ObjectManager')
+
+        managed_objects = obj_manager.GetManagedObjects()
+
+        modems = {path: interfaces for path, interfaces in managed_objects.items()
+                  if path.startswith('/org/freedesktop/ModemManager1/Modem/')}
+
+        if modems:
+            print(f"Found {len(modems)} modem(s)")
+            for modem_path in modems.keys():
+                check_modem_properties(modem_path, bus)
+        else:
+            print("No modems found")
+
+        return True
+    except dbus.exceptions.DBusException as e1:
+        try:
+            mm_proxy = bus.get_object(MM_SERVICE, MM_OBJECT_PATH)
+            modem_manager = dbus.Interface(mm_proxy, 'org.freedesktop.ModemManager1')
+            modem_paths = modem_manager.GetModems()
+
+            if modem_paths:
+                print(f"Found {len(modem_paths)} modem(s)")
+                for modem_path in modem_paths:
+                    check_modem_properties(modem_path, bus)
+            else:
+                print("No modems found")
+
+            return True
+        except dbus.exceptions.DBusException as e2:
+            print(f"Could not find modems: {e2}")
+            return False
+
+def check_for_modem_manager(bus):
+    global mm_check_in_progress, monitored_modems
+
+    if mm_check_in_progress:
+        return True
+
+    mm_check_in_progress = True
+
+    try:
+        mm_proxy = bus.get_object(MM_SERVICE, MM_OBJECT_PATH)
+        properties_iface = dbus.Interface(mm_proxy, MM_INTERFACE)
+        mm_properties = properties_iface.GetAll('org.freedesktop.ModemManager1')
+
+        find_modems(bus)
+
+        try:
+            obj_manager = dbus.Interface(bus.get_object(MM_SERVICE, '/'),
+                                         'org.freedesktop.DBus.ObjectManager')
+
+            def interfaces_added(object_path, interfaces_and_properties):
+                if object_path.startswith('/org/freedesktop/ModemManager1/Modem/'):
+                    if object_path not in monitored_modems:
+                        print(f"New modem added: {object_path}")
+                        check_modem_properties(object_path, bus)
+
+            obj_manager.connect_to_signal('InterfacesAdded', interfaces_added)
+        except dbus.exceptions.DBusException as e:
+            print(f"Could not set up ObjectManager monitoring: {e}")
+
+        mm_check_in_progress = False
+        return True
+    except dbus.exceptions.DBusException as e:
+        if "org.freedesktop.DBus.Error.ServiceUnknown" in str(e):
+            print("ModemManager not available yet. Waiting...")
+        else:
+            print(f"D-Bus error: {e}")
+
+        mm_check_in_progress = False
+        return False
+
+def main():
+    global monitored_modems
+
+    if os.getuid() != 32011:
+        print(f"Current UID {os.getuid()} is not 32011, exiting.")
+        sys.exit(0)
+
+    if os.path.exists(MARKER_FILE):
+        print(f"Marker file {MARKER_FILE} exists, Exiting.")
+        sys.exit(0)
+
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+    bus = dbus.SystemBus()
+
+    check_for_modem_manager(bus)
+
+    def name_owner_changed(name, old_owner, new_owner):
+        if name == MM_SERVICE:
+            if new_owner:
+                print(f"ModemManager appeared on the bus")
+                if not old_owner:
+                    monitored_modems.clear()
+                check_for_modem_manager(bus)
+            else:
+                print("ModemManager disappeared from the bus")
+                monitored_modems.clear()
+
+    bus.add_signal_receiver(name_owner_changed,
+                            signal_name='NameOwnerChanged',
+                            dbus_interface='org.freedesktop.DBus')
+
+    mainloop = GLib.MainLoop()
+    try:
+        mainloop.run()
+    except KeyboardInterrupt:
+        print("Exiting...")
+
+if __name__ == "__main__":
+    main()

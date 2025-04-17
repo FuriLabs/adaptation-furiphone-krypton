@@ -1,0 +1,6 @@
+[Unit]
+Description=Krypton oneshot band setter
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/krypton-band-setter
