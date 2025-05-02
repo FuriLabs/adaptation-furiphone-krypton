@@ -3,7 +3,6 @@ Maintainer: Bardia Moshiri <bardia@furilabs.com>
 Section: metapackages
 Priority: optional
 Build-Depends: debhelper-compat (= 13),
-               libdbus-1-dev,
                libglib2.0-dev,
                libwayland-dev,
                wayland-protocols,
@@ -38,4 +37,5 @@ Pre-Depends: linux-bootimage-furiphone-krypton (>= 4.19.325+furios5),
 Depends: ${misc:Depends}, ${shlibs:Depends},
          bsdextrautils,
          e2fsprogs,
+         python3-dbus,
 Description: krypton's adaptation configs
