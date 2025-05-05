@@ -69,4 +69,13 @@ chown furios:furios /sys/class/leds/vibrator/*
 # Disable coredumps
 sysctl -w kernel.core_pattern=|/bin/false
 
+# Helps with VoLTE. Some carriers incorrectly send default route in the RA on
+# the VoLTE network, so IPv6 traffic will try to go to VoLTE interface and fail.
+# For internet access, NetworManager should step in and set default route on the
+# correct interface; NM itself sets `accept_ra=0` and parses RA itself so this
+# should not affect it.
+
+sysctl -w net.ipv6.conf.all.accept_ra_defrtr=0
+sysctl -w net.ipv6.conf.default.accept_ra_defrtr=0
+
 exit 0
