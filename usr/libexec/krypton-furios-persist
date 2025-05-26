@@ -27,10 +27,10 @@ else
         mkdir -p /var/lib/furios-persist
         mount "${FURIOS_PERSIST}" /var/lib/furios-persist
 
-        # TODO: this should not be needed. for some reason ramdisk sometimes does not remove it
+        # TODO: this should not be needed. for some reason ramdisk sometimes does not move it out of the way
         # perhaps a `sync` or `sleep 1` in ramdisk could fix it?
         if [ -f "/var/lib/furios-persist/bootman/next-boot" ]; then
-            rm -f /var/lib/furios-persist/bootman/next-boot
+            mv /var/lib/furios-persist/bootman/next-boot /var/lib/furios-persist/bootman/old-boot
         fi
     fi
 fi
