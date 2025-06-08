@@ -8,9 +8,7 @@ override_dh_auto_build:
 	wayland-scanner private-code < /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml > src/xdg-shell-protocol.c
 	wayland-scanner client-header < /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml > src/xdg-shell-client-protocol.h
 	gcc src/xdg-toplevel-getinfo.c src/xdg-shell-protocol.c `pkg-config --cflags --libs wayland-client gio-2.0` -lwayland-client -lm -o usr/libexec/xdg-toplevel-getinfo
-	gcc src/mtk-wmt-manager.c `pkg-config --libs --cflags libandroid-properties` -o usr/libexec/mtk-wmt-manager
 
 override_dh_installsystemd:
 	dh_installsystemd -padaptation-krypton-configs --name=krypton-performance krypton-performance.service --no-start
 	dh_installsystemd -padaptation-krypton-configs --name=krypton-startup krypton-startup.service --no-start
-	dh_installsystemd -padaptation-krypton-configs --name=mtk-wmt-manager mtk-wmt-manager.service --no-stop-on-upgrade
