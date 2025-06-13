@@ -26,9 +26,6 @@ while [ ! -e /sys/class/ieee80211/phy0 ]; do
     sleep 1
 done
 
-# Enable wake on lan magic packet
-iw phy phy0 wowlan enable magic-packet
-
 # Disable wmt driver debugging
 echo "0xFF:0x03" > /proc/net/wlan/dbgLevel
 
