@@ -22,13 +22,6 @@ fi
 [ -e "/sys/class/flashlight/mt-flash-led1/" ] && chown furios:furios /sys/class/flashlight/mt-flash-led1/*
 [ -e "/sys/class/flashlight/mt-flash-led2/" ] && chown furios:furios /sys/class/flashlight/mt-flash-led2/*
 
-while [ ! -e /sys/class/ieee80211/phy0 ]; do
-    sleep 1
-done
-
-# Enable wake on lan magic packet
-iw phy phy0 wowlan enable magic-packet
-
 # Disable wmt driver debugging
 echo "0xFF:0x03" > /proc/net/wlan/dbgLevel
 
