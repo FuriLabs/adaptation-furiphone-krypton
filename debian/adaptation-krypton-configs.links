@@ -19,3 +19,4 @@
 /usr/lib/systemd/user/krypton-band-setter.service /usr/lib/systemd/user/gnome-session.target.wants/krypton-band-setter.service
 /dev/null /etc/systemd/system/packagekit.service
 /dev/null /etc/systemd/system/alsa-restore.service
+/dev/null /etc/systemd/system/atopacct.service
