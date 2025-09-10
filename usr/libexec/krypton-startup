@@ -66,6 +66,8 @@ sysctl -w net.ipv6.conf.all.accept_ra_defrtr=0
 sysctl -w net.ipv6.conf.default.accept_ra_defrtr=0
 
 # Make sure all nodes for call audio get the right permission
+# This used to be set by udev during init, but it doesn't hurt to make sure they are correct
+# These are needed for call audio to be routed correctly
 chown radio:radio /dev/ccci_0_200
 chmod 0660 /dev/ccci_0_200
 chown radio:radio /dev/ccci_0_202
@@ -172,5 +174,8 @@ chown radio:radio /dev/ccci_wifi_proxy
 chmod 0660 /dev/ccci_wifi_proxy
 chown radio:radio /dev/ccci_woa
 chmod 0660 /dev/ccci_woa
+
+# Make systemd happy
+chmod 444 /proc/cmdline
 
 exit 0
