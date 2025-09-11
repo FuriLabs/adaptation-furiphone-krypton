@@ -20,3 +20,4 @@
 /dev/null /etc/systemd/system/packagekit.service
 /dev/null /etc/systemd/system/alsa-restore.service
 /dev/null /etc/systemd/system/atopacct.service
+/dev/null /etc/systemd/system/atop.service
