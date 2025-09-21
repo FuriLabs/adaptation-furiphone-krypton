@@ -1,7 +1,6 @@
 [Unit]
 Description=Perform krypton's startup initialization tasks
 Requires=lxc@android.service
-Before=furios-boot-wlan.service
 After=mtk-wmt-manager.service
 
 [Service]
