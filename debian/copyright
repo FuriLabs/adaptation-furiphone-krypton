@@ -6,7 +6,7 @@ Files: *
 Copyright: 2025 Bardia Moshiri <fakeshell@bardia.tech>
 License: BSD-3-clause
 
-Files: src/flashlightd-slider.c src/xdg-toplevel-getinfo.c
+Files: src/xdg-toplevel-getinfo.c
 Copyright: 2025 Bardia Moshiri <fakeshell@bardia.tech>
 License: GPL-3.0+
 
