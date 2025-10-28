@@ -175,6 +175,8 @@ chmod 0660 /dev/ccci_wifi_proxy
 chown radio:radio /dev/ccci_woa
 chmod 0660 /dev/ccci_woa
 
+chmod 0666 /dev/ion
+
 # Make systemd happy
 chmod 444 /proc/cmdline
 
