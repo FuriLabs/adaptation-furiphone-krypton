@@ -1,0 +1,7 @@
+[io.furios.device]
+andromeda = true
+assistant = true
+gps = true
+usb = true
+fingerprint = true
+nfc = true
