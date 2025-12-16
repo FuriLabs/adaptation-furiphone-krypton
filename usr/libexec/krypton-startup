@@ -7,9 +7,9 @@ else
     total_mem=$(grep MemTotal /proc/meminfo | awk '{print $2 * 1024}')
     zram_size=$(echo "$total_mem * 0.55" | bc | cut -d'.' -f1)
 
+    echo "lz4" > /sys/block/zram0/comp_algorithm
     echo "$zram_size" > /sys/block/zram0/disksize
     echo "100" > /proc/sys/vm/swappiness
-    echo "lz4" > /sys/block/zram0/comp_algorithm
     echo "0" > /proc/sys/vm/page-cluster
     echo "false" > /sys/kernel/mm/swap/vma_ra_enabled
 
