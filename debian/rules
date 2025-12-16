@@ -10,5 +10,4 @@ override_dh_auto_build:
 	gcc src/xdg-toplevel-getinfo.c src/xdg-shell-protocol.c `pkg-config --cflags --libs wayland-client gio-2.0` -lwayland-client -lm -o usr/libexec/xdg-toplevel-getinfo
 
 override_dh_installsystemd:
-	dh_installsystemd -padaptation-krypton-configs --name=krypton-performance krypton-performance.service --no-start
 	dh_installsystemd -padaptation-krypton-configs --name=krypton-startup krypton-startup.service --no-start
