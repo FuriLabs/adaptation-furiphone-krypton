@@ -1,21 +1,13 @@
 #!/bin/bash
 
-# Setup zram on setup
-if grep -q "/dev/zram0" /proc/swaps; then
-    echo "zram is already configured"
-else
-    total_mem=$(grep MemTotal /proc/meminfo | awk '{print $2 * 1024}')
-    zram_size=$(echo "$total_mem * 0.55" | bc | cut -d'.' -f1)
+# Disable VMA read-ahead to reduce unnecessary memory usage
+echo "false" > /sys/kernel/mm/swap/vma_ra_enabled
 
-    echo "lz4" > /sys/block/zram0/comp_algorithm
-    echo "$zram_size" > /sys/block/zram0/disksize
-    echo "100" > /proc/sys/vm/swappiness
-    echo "0" > /proc/sys/vm/page-cluster
-    echo "false" > /sys/kernel/mm/swap/vma_ra_enabled
+# Prefer swapping cold anonymous memory to zram to avoid OOM
+sysctl -w vm.swappiness=100
 
-    mkswap /dev/zram0
-    swapon -p -3 /dev/zram0
-fi
+# Don't do swap read-ahead (zram isn't a real block device)
+sysctl -w vm.page-cluster=0
 
 # Allow FuriOS user to access touchscreen nodes and flashlight
 [ -e "/sys/kernel/furilabs/palmrejectionmode/common_node/" ] && chown furios:furios /sys/kernel/furilabs/palmrejectionmode/common_node/*mode
