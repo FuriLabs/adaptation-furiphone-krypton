@@ -13,6 +13,7 @@ Vcs-Git: https://github.com/furilabs/adaptation-furiphone-krypton.git
 Package: adaptation-furiphone-krypton
 Provides: adaptation-vendor-device
 Conflicts: adaptation-vendor-device
+Replaces: adaptation-vendor-device
 Architecture: arm64
 Pre-Depends: linux-bootimage-furiphone-krypton (>= 4.19.325+furios5),
              linux-image-furiphone-krypton (>= 4.19.325+furios5),
