@@ -26,8 +26,8 @@ Depends: ${misc:Depends},
          gsd-adapter,
          assistant-button,
          ofono-binder-plugin-ext-mtk,
-         krypton-factory-image,
-         krypton-modem-image,
+#         krypton-factory-image,
+#         krypton-modem-image,
 Description: adaptation-furiphone-krypton - meta
  FuriPhone FLX1 api32 adaptation metapackage
 
