@@ -13,8 +13,6 @@ Vcs-Git: https://github.com/furilabs/adaptation-furiphone-krypton.git
 Package: adaptation-furiphone-krypton
 #Provides: adaptation-vendor-device
 #Replaces: adaptation-vendor-device
-Conflicts: adaptation-furiphone-radon
-Replaces: adaptation-furiphone-radon
 Architecture: arm64
 Pre-Depends: mtk-wifi-manager,
 Depends: ${misc:Depends},
