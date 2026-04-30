@@ -41,4 +41,6 @@ Depends: ${misc:Depends}, ${shlibs:Depends},
          e2fsprogs,
          python3-dbus,
          systemd-zram-generator,
+         libgbinder-tools,
+         libhybris-utils,
 Description: krypton's adaptation configs
