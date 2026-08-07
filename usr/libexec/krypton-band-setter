@@ -14,8 +14,14 @@ MM_MODEM_INTERFACE = 'org.freedesktop.ModemManager1.Modem'
 
 MARKER_FILE = os.path.expanduser('~/.local/share/lte_transision_done')
 
-# default to non 5G. 5G seems to be problematic in the current stack
-BANDS = [4, 1, 2, 3, 12, 10, 31, 32, 33, 34, 35, 37, 38, 42, 50, 58, 68, 70, 96, 301]
+# Enable all 2G, 3G and 4G bands as well as 5G band n1
+BANDS = [
+    1, 2, 3, 4,
+    10, 12,
+    *range(31, 45),
+    *range(47, 97),
+    301
+]
 
 monitored_modems = set()
 mm_check_in_progress = False
@@ -28,7 +34,22 @@ def set_bands_and_create_marker(modem_path, bus):
         modem_iface = dbus.Interface(modem_obj, MM_MODEM_INTERFACE)
         properties_iface = dbus.Interface(modem_obj, MM_INTERFACE)
 
-        dbus_bands = dbus.Array(BANDS, signature='u')
+        properties = properties_iface.GetAll(MM_MODEM_INTERFACE)
+
+        if 'SupportedBands' not in properties:
+            print("Failed to get SupportedBands")
+            return False
+
+        supported_bands = [int(band) for band in properties['SupportedBands']]
+        bands = [band for band in BANDS if band in supported_bands]
+
+        if not bands:
+            print(f"None of our requested bands are supported. SupportedBands: {supported_bands}")
+            return False
+
+        print(f"Supported requested bands: {bands}")
+
+        dbus_bands = dbus.Array(bands, signature='u')
         modem_iface.SetCurrentBands(dbus_bands)
 
         time.sleep(5)
@@ -37,7 +58,7 @@ def set_bands_and_create_marker(modem_path, bus):
         if 'CurrentBands' in properties:
             current_bands = properties['CurrentBands']
             current_bands_list = sorted([int(band) for band in current_bands])
-            sorted_bands = sorted(BANDS)
+            sorted_bands = sorted(bands)
 
             if current_bands_list != sorted_bands:
                 print(f"Failed to set bands, CurrentBands {current_bands_list} is not equal to our bands: {sorted_bands}")
@@ -52,7 +73,7 @@ def set_bands_and_create_marker(modem_path, bus):
 
         os.makedirs(os.path.dirname(MARKER_FILE), exist_ok=True)
         with open(MARKER_FILE, 'w') as f:
-            f.write(f"Bands {BANDS} set on {time.strftime('%Y-%m-%d %H:%M:%S')}")
+            f.write(f"Bands {bands} set on {time.strftime('%Y-%m-%d %H:%M:%S')}")
 
         return True
     except dbus.exceptions.DBusException as e:
