@@ -169,6 +169,8 @@ chown radio:radio /dev/ccci_wifi_proxy
 chmod 0660 /dev/ccci_wifi_proxy
 chown radio:radio /dev/ccci_woa
 chmod 0660 /dev/ccci_woa
+chown system:audio /dev/usip
+chmod 0660 /dev/usip
 
 chmod 0666 /dev/ion
 
