@@ -1,5 +1,7 @@
 #!/usr/bin/pulseaudio -nF
-# fix volume not being adjustable
-.ifexists module-droid-card.so
+
+.ifexists module-audio-manager-card.so
+load-module module-audio-manager-card
+.else
 load-module module-droid-card rate=48000 voice_virtual_stream=true hw_volume=false
 .endif
