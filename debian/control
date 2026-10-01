@@ -26,6 +26,7 @@ Depends: ${misc:Depends},
          gsd-adapter,
          assistant-button,
          ofono-binder-plugin-ext-mtk,
+         pulseaudio-module-audio-manager,
          krypton-factory-image,
          krypton-modem-image,
 Description: adaptation-furiphone-krypton - meta
